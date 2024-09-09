@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Cocktail: Identifiable, Decodable {
+struct Cocktail: Identifiable, Codable {
     let id: String
     let name: String
     let category: String

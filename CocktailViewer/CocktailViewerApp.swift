@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct CocktailViewerApp: App {
+    @StateObject var viewModel = CocktailViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
+                .environmentObject(viewModel)
         }
     }
 }

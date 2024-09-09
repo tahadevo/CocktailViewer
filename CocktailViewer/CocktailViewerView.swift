@@ -7,50 +7,69 @@
 
 import SwiftUI
 
-struct CocktailViewerView: View {
-    @ObservedObject var viewModel = CocktailViewModel()
-    
-    @State private var searchText = ""
+struct MainPageView: View {
+    @EnvironmentObject var viewModel: CocktailViewModel
     
     var body: some View {
         NavigationView {
-            VStack {
-                TextField("Search cocktails", text: $searchText, onCommit: {
-                    viewModel.fetchCocktails(searchTerm: searchText)
-                })
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-                
-                List(viewModel.cocktails) { cocktail in
-                    VStack(alignment: .leading) {
-                        Text(cocktail.name)
-                            .font(.headline)
-                        Text(cocktail.category)
-                            .font(.subheadline)
-                        Text(cocktail.instructions)
-                            .font(.body)
-                            .lineLimit(2)
-                        AsyncImage(url: URL(string: cocktail.imageUrl)) { image in
-                            image.resizable()
-                                .scaledToFit()
-                                .frame(height: 100)
-                        } placeholder: {
-                            ProgressView()
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [Color.pink.opacity(0.3), Color.purple.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+                VStack(alignment: .leading, spacing: 20.0) {
+                    Text("Discover Your Favorite Cocktails")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.leading, 16)
+                    
+                    Text("Browse through a wide selection of cocktails and find your new favorite.")
+                        .font(.body)
+                        .foregroundColor(.white.opacity(0.9))
+                        .padding(.leading, 16)
+                        .padding(.trailing, 16)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(viewModel.cocktails) { cocktail in
+                                NavigationLink(destination: CocktailDetailView(cocktail: cocktail)) {
+                                    CocktailCardView(cocktail: cocktail, onAddToBasket: {
+                                        viewModel.showAddToBasketOverlay(cocktail: cocktail)
+                                    })
+                                }
+                                .frame(width: 250)
+                            }
                         }
+                        .padding(.leading)
                     }
+                    .padding(.vertical)
+                    
+                    Text("Categories for You")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.horizontal)
+                    
+//                    ScrollView(.horizontal, showsIndicators: false) {
+//                        HStack(spacing: 16) {
+//                            ForEach(viewModel.categories, id: \.self) { category in
+//                                CategoryView(category: category)
+//                            }
+//                        }
+//                        .padding(.horizontal)
+//                    }
+                    
+                    Spacer()
                 }
+                .navigationTitle("Explore")
             }
-            .navigationTitle("Cocktail Viewer")
+            .overlay(
+                viewModel.showOverlay ? AddToBasketOverlayView(cocktail: viewModel.selectedCocktail!, onConfirm: {
+                    viewModel.addToBasket(cocktail: viewModel.selectedCocktail!)
+                }) : nil
+            )
         }
     }
 }
 
-struct ContentView: View {
-    var body: some View {
-        CocktailViewerView()
-    }
-}
-
 #Preview {
-    ContentView()
+    MainPageView()
 }
