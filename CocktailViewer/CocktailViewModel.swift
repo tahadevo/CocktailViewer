@@ -20,7 +20,7 @@ class CocktailViewModel: ObservableObject {
     private let baseUrl = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s="
     private let apiKey = "1"
     
-    let categories: [String] = ["Classic", "Tropical", "Non-Alcoholic", "Signature"]
+    let categories: [String] = ["Classic", "Tropical", "Non-Alcoholic", "Signature", "Hello"]
     
     init() {
         fetchCocktails(searchTerm: "")
