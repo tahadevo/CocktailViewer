@@ -22,7 +22,7 @@ struct SavedCocktailsView: View {
                 .onDelete(perform: removeSavedCocktail)
             }
             .navigationTitle("Saved Cocktails")
-            .background(Color(.systemGroupedBackground))
+            .background(Color.white)
         }
     }
     

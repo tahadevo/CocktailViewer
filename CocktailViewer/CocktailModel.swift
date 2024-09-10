@@ -22,3 +22,35 @@ struct Cocktail: Identifiable, Codable {
         case imageUrl = "strDrinkThumb"
     }
 }
+
+struct FilteredCocktail: Identifiable, Codable {
+    let id: String
+    let name: String
+    let imageUrl: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "idDrink"
+        case name = "strDrink"
+        case imageUrl = "strDrinkThumb"
+    }
+}
+
+struct CategoryListResponse: Decodable {
+    let drinks: [Category]
+}
+
+struct Category: Decodable {
+    let strCategory: String
+}
+
+struct IngredientListResponse: Decodable {
+    let drinks: [Ingredient]
+}
+
+struct Ingredient: Decodable {
+    let strIngredient1: String
+}
+
+struct FilteredCocktailListResponse: Decodable {
+    let drinks: [FilteredCocktail]
+}

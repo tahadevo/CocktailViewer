@@ -11,24 +11,25 @@ struct BasketPageView: View {
     @EnvironmentObject var viewModel: CocktailViewModel
     
     var body: some View {
-        VStack {
-            List {
+        NavigationView {
+            VStack {
                 ForEach(viewModel.basket) { cocktail in
                     Text(cocktail.name)
                 }
+                
+                Button(action: viewModel.saveCocktailsToSaved) {
+                    Text("Save Cocktails in Basket")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(10.0)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+                .padding()
             }
-            
-            Button(action: viewModel.saveCocktailsToSaved) {
-                Text("Save Cocktails in Basket")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(10.0)
-            }
-            .buttonStyle(BorderlessButtonStyle())
-            .padding()
+            .navigationTitle("Basket")
+            .applyGradientBackground()
         }
-        .navigationTitle("Basket")
     }
 }

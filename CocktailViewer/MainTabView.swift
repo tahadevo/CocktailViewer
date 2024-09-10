@@ -36,3 +36,8 @@ struct MainTabView: View {
         }
     }
 }
+
+#Preview {
+    MainTabView()
+        .environmentObject(CocktailViewModel())
+}

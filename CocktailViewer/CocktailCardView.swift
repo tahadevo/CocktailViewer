@@ -25,11 +25,11 @@ struct CocktailCardView: View {
             
             Text(cocktail.name)
                 .font(.headline)
-                .foregroundColor(.white)
+                .foregroundColor(.purple)
             
             Text(cocktail.category)
                 .font(.subheadline)
-                .foregroundColor(.white.opacity(0.8))
+                .foregroundColor(.purple.opacity(0.8))
             
             Spacer()
             
@@ -49,7 +49,6 @@ struct CocktailCardView: View {
             LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.white.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
         )
         .cornerRadius(15.0)
-        .shadow(radius: 5.0)
         .frame(width: 250, height: 300)
     }
 }

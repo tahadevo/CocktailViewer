@@ -44,7 +44,7 @@ struct CocktailDetailView: View {
             Spacer()
             
             Button(action: {
-                viewModel.showAddToBasketOverlay(cocktail: cocktail)
+                viewModel.addToBasket(cocktail: cocktail)
             }) {
                 Text("Add to Basket")
                     .font(.headline)

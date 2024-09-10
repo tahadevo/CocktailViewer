@@ -19,7 +19,7 @@ struct UserPageView: View {
                     //handle
                 }
             }
+            .navigationTitle("Profile")
         }
-        .navigationTitle("Profile")
     }
 }

@@ -29,6 +29,7 @@ struct LoginView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(10.0)
                     .padding(.horizontal)
+                    .textInputAutocapitalization(.never)
                 
                 SecureField("Password", text: $password)
                     .padding()
@@ -54,7 +55,7 @@ struct LoginView: View {
                 .padding(.top, 20)
             }
             .padding()
-            .background(Color(.systemBackground))
+            .applyGradientBackground()
         }
     }
 }

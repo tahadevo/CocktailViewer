@@ -12,22 +12,8 @@ struct MainPageView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                LinearGradient(gradient: Gradient(colors: [Color.pink.opacity(0.3), Color.purple.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
-                    .edgesIgnoringSafeArea(.all)
+            ScrollView {
                 VStack(alignment: .leading, spacing: 20.0) {
-                    Text("Discover Your Favorite Cocktails")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .padding(.leading, 16)
-                    
-                    Text("Browse through a wide selection of cocktails and find your new favorite.")
-                        .font(.body)
-                        .foregroundColor(.white.opacity(0.9))
-                        .padding(.leading, 16)
-                        .padding(.trailing, 16)
-                    
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
                             ForEach(viewModel.cocktails) { cocktail in
@@ -43,33 +29,83 @@ struct MainPageView: View {
                     }
                     .padding(.vertical)
                     
-                    Text("Categories for You")
-                        .font(.title2)
+                    Text("Discover Your Favorite Cocktails")
+                        .font(.largeTitle)
                         .fontWeight(.bold)
-                        .padding(.horizontal)
+                        .foregroundColor(.purple)
+                        .padding(.leading, 16)
                     
-//                    ScrollView(.horizontal, showsIndicators: false) {
-//                        HStack(spacing: 16) {
-//                            ForEach(viewModel.categories, id: \.self) { category in
-//                                CategoryView(category: category)
-//                            }
-//                        }
-//                        .padding(.horizontal)
-//                    }
+                    Text("Categories for You")
+                        .font(.headline)
+                        .padding(.leading)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(viewModel.categories, id: \.self) { category in
+                                NavigationLink(destination: FilteredCocktailsListView(filterType: .category, filterValue: category)) {
+                                    VStack {
+                                        Image(systemName: "cup.and.saucer.fill")
+                                            .resizable()
+                                            .frame(width: 40, height: 40)
+                                            .foregroundColor(.white)
+                                            .background(Circle().fill(Color.blue).frame(width: 60, height: 60))
+                                            .padding()
+                                        
+                                        Text(category)
+                                            .font(.caption)
+                                            .foregroundColor(.primary)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
                     
                     Spacer()
+                    
+                    Text("Ingredients You Might Like")
+                        .font(.headline)
+                        .padding(.leading)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(viewModel.ingredients, id: \.self) { ingredient in
+                                NavigationLink(destination: FilteredCocktailsListView(filterType: .ingredient, filterValue: ingredient)) {
+                                    VStack {
+                                        AsyncImage(url: URL(string: "https://www.thecocktaildb.com/images/ingredients/\(ingredient)-Small.png")) { image in
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                        } placeholder: {
+                                            Color.gray
+                                        }
+                                        .frame(width: 60, height: 60)
+                                        .clipShape(Circle())
+                                        
+                                        Text(ingredient)
+                                            .font(.caption)
+                                            .foregroundColor(.primary)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    .padding(.bottom)
                 }
-                .navigationTitle("Explore")
             }
-            .overlay(
-                viewModel.showOverlay ? AddToBasketOverlayView(cocktail: viewModel.selectedCocktail!, onConfirm: {
-                    viewModel.addToBasket(cocktail: viewModel.selectedCocktail!)
-                }) : nil
-            )
+            .navigationTitle("Explore")
+            .applyGradientBackground()
         }
+        .overlay(
+            viewModel.showOverlay ? AddToBasketOverlayView(cocktail: viewModel.selectedCocktail!, onConfirm: {
+                viewModel.addToBasket(cocktail: viewModel.selectedCocktail!)
+            }) : nil
+        )
     }
 }
 
 #Preview {
     MainPageView()
+        .environmentObject(CocktailViewModel())
 }
