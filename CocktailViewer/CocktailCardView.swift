@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CocktailCardView: View {
     var cocktail: Cocktail
-    var onAddToBasket: () -> Void
     
     var body: some View {
         VStack(alignment: .center) {
@@ -30,19 +29,6 @@ struct CocktailCardView: View {
             Text(cocktail.category)
                 .font(.subheadline)
                 .foregroundColor(.purple.opacity(0.8))
-            
-            Spacer()
-            
-            Button(action: onAddToBasket) {
-                Text("Add to Basket")
-                    .font(.headline)
-                    .foregroundColor(.blue)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.white)
-                    .cornerRadius(10.0)
-            }
-            .buttonStyle(BorderlessButtonStyle())
         }
         .padding()
         .background(
@@ -50,33 +36,5 @@ struct CocktailCardView: View {
         )
         .cornerRadius(15.0)
         .frame(width: 250, height: 300)
-    }
-}
-
-struct AddToBasketOverlayView: View {
-    var cocktail: Cocktail
-    var onConfirm: () -> Void
-    
-    var body: some View {
-        VStack {
-            Text("Add \(cocktail.name) to Basket?")
-                .font(.headline)
-                .padding()
-            
-            HStack {
-                Button("Cancel") {
-                    
-                }
-                .padding()
-                
-                Button("Add") {
-                    onConfirm()
-                }
-                .padding()
-            }
-        }
-        .background(Color.white)
-        .cornerRadius(10.0)
-        .shadow(radius: 10.0)
     }
 }

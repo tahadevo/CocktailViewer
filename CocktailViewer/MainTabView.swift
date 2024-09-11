@@ -8,31 +8,38 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject var viewModel: CocktailViewModel
+    
     var body: some View {
-        TabView {
-            MainPageView()
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Home")
-                }
+        ZStack {
+            TabView {
+                MainPageView()
+                    .tabItem {
+                        Image(systemName: "house")
+                        Text("Home")
+                    }
+                
+                SearchPageView()
+                    .tabItem {
+                        Image(systemName: "magnifyingglass")
+                        Text("Search")
+                    }
+                
+                BasketPageView()
+                    .tabItem {
+                        Image(systemName: "cart")
+                        Text("Basket")
+                    }
+                
+                UserPageView()
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Profile")
+                    }
+            }
             
-            SearchPageView()
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Search")
-                }
-            
-            BasketPageView()
-                .tabItem {
-                    Image(systemName: "cart")
-                    Text("Basket")
-                }
-            
-            UserPageView()
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("Profile")
-                }
+            BadgeView(count: viewModel.basket.count)
+                .offset(x: 55, y: 350)
         }
     }
 }

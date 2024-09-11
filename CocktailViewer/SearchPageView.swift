@@ -12,50 +12,61 @@ struct SearchPageView: View {
     @State private var searchText: String = ""
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 HStack {
                     TextField("Search cocktails...", text: $searchText)
                         .textInputAutocapitalization(.never)
                         .padding(.vertical, 10)
-                        .padding(.horizontal, 20)
+                        .padding(.leading, 20)
+                        .padding(.trailing, 10)
                         .background(Color(.systemGray6))
                         .cornerRadius(10)
-                        .padding(.horizontal)
-                        .onSubmit {
-                            viewModel.fetchCocktails(searchTerm: searchText)
-                        }
+                        .padding(.leading)
+                    
+                    Button(action: {
+                        submitSearch()
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                            .padding(10)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .clipShape(Circle())
+                    }
+                    .padding(.trailing)
                 }
                 .padding(.top)
                 
                 List {
                     ForEach(viewModel.searchedCocktails, id: \.id) { cocktail in
-                        HStack {
-                            AsyncImage(url: URL(string: cocktail.imageUrl)) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 50, height: 50)
-                                    .cornerRadius(8)
-                                    .padding(.trailing)
-                            } placeholder: {
-                                ProgressView()
+                        NavigationLink(destination: CocktailDetailView(id: cocktail.id)) {
+                            HStack {
+                                AsyncImage(url: URL(string: cocktail.imageUrl)) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 50, height: 50)
+                                        .cornerRadius(8)
+                                        .padding(.trailing)
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                
+                                Spacer()
+                                
+                                Text(cocktail.name)
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                Spacer()
+                                
+                                Text(cocktail.category)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: 100, alignment: .leading)
                             }
-                            
-                            Spacer()
-                            
-                            Text(cocktail.name)
-                                .font(.headline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            Spacer()
-                            
-                            Text(cocktail.category)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                                .frame(maxWidth: 100, alignment: .leading)
+                            .padding(.vertical, 8)
                         }
-                        .padding(.vertical, 8)
                     }
                 }
                 .listStyle(PlainListStyle())
@@ -63,6 +74,10 @@ struct SearchPageView: View {
             .applyGradientBackground()
             .navigationTitle("Search")
         }
+    }
+    
+    private func submitSearch() {
+        viewModel.fetchCocktails(searchTerm: searchText)
     }
 }
 

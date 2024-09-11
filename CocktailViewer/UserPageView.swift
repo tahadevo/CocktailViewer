@@ -9,16 +9,20 @@ import SwiftUI
 
 struct UserPageView: View {
     var body: some View {
-        NavigationView {
-            List {
-                NavigationLink(destination: SavedCocktailsView()) {
-                    Text("Saved Cocktails")
+        NavigationStack {
+            VStack {
+                List {
+                    NavigationLink(destination: SavedCocktailsView()) {
+                        Text("Saved Cocktails")
+                    }
+                    
+                    Button("Log Out") {
+                        //handle
+                    }
                 }
-                
-                Button("Log Out") {
-                    //handle
-                }
+                .listStyle(PlainListStyle())
             }
+            .applyGradientBackground()
             .navigationTitle("Profile")
         }
     }

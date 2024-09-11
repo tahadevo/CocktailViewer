@@ -27,20 +27,22 @@ struct FilteredCocktailsListView: View {
         let titleStr = filterType == FilterType.category ? "Cocktails in \(filterValue) Category" : "Cocktails with \(filterValue)"
         
         VStack {
-            Text(titleStr)
-                .font(.title)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.leading)
-
+//                Text(titleStr)
+//                    .font(.title)
+//                    .fontWeight(.bold)
+//                    .multilineTextAlignment(.leading)
+            
             if viewModel.filteredCocktails.isEmpty {
                 Text("No cocktails found.")
-                    .multilineTextAlignment(.leading)
+                    .multilineTextAlignment(.center)
             } else {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(viewModel.filteredCocktails, id: \.id) { cocktail in
+                            NavigationLink(destination: CocktailDetailView(id: cocktail.id)) {
                                 FilteredCocktailCardView(cocktail: cocktail)
                                     .frame(maxHeight: .infinity)
+                            }
                         }
                     }
                 }
@@ -48,6 +50,7 @@ struct FilteredCocktailsListView: View {
             }
         }
         .applyGradientBackground()
+        .navigationTitle(titleStr)
         .onAppear {
             switch filterType {
             case .category:

@@ -14,13 +14,11 @@ class CocktailViewModel: ObservableObject {
     @Published var categories: [String] = []
     @Published var ingredients: [String] = []
     
-    @Published var savedCocktails: [Cocktail] = []
-    @Published var basket: [Cocktail] = []
-    
-    @Published var showOverlay: Bool = false
-    @Published var selectedCocktail: Cocktail?
+    @Published var savedCocktails: [CocktailDetail] = []
+    @Published var basket: [CocktailDetail] = []
     
     @Published var filteredCocktails: [FilteredCocktail] = []
+    @Published var cocktailDetail: CocktailDetail?
 
     private let userDefaultsKey = "savedCocktails"
     private var cancellables = Set<AnyCancellable>()
@@ -78,19 +76,14 @@ class CocktailViewModel: ObservableObject {
     }
     
     func fetchCocktailsByCategory(category: String) {
-        print("I'm here")
         guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=\(category.replacingOccurrences(of: " ", with: "_"))") else { return }
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data, error == nil else { return }
             
-            print(data)
-            
             if let cocktailResponse = try? JSONDecoder().decode(FilteredCocktailListResponse.self, from: data) {
-                print("I'm here, again.")
                 DispatchQueue.main.async {
                     self.filteredCocktails = cocktailResponse.drinks
-                    print("Fetched \(cocktailResponse.drinks.count) cocktails")
                 }
             }
         }.resume()
@@ -110,6 +103,30 @@ class CocktailViewModel: ObservableObject {
         }.resume()
     }
     
+    func fetchCocktailDetail(by id: String) {
+        let urlString = "https://thecocktaildb.com/api/json/v1/1/lookup.php?i=\(id)"
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL")
+            return
+        }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map { $0.data }
+            .decode(type: CocktailDetailResponse.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error fetching cocktail details: \(error.localizedDescription)")
+                case .finished:
+                    break
+                }
+            }, receiveValue: { [weak self] response in
+                self?.cocktailDetail = response.drinks.first
+            })
+            .store(in: &cancellables)
+    }
+    
     func saveCocktailsToSaved() {
         savedCocktails.append(contentsOf: basket)
         basket.removeAll()
@@ -121,17 +138,11 @@ class CocktailViewModel: ObservableObject {
         saveCocktailsToUserDefaults()
     }
     
-    func showAddToBasketOverlay(cocktail: Cocktail) {
-        selectedCocktail = cocktail
-        showOverlay = true
-    }
-    
-    func addToBasket(cocktail: Cocktail) {
+    func addToBasket(cocktail: CocktailDetail) {
         basket.append(cocktail)
-        showOverlay = false
     }
     
-    func removeFromBasket(cocktail: Cocktail) {
+    func removeFromBasket(cocktail: CocktailDetail) {
         basket.removeAll { $0.id == cocktail.id }
     }
     
@@ -150,7 +161,7 @@ class CocktailViewModel: ObservableObject {
     private func loadSavedCocktails() {
         if let savedData = UserDefaults.standard.data(forKey: userDefaultsKey) {
             let decoder = JSONDecoder()
-            if let loadedCocktails = try? decoder.decode([Cocktail].self, from: savedData) {
+            if let loadedCocktails = try? decoder.decode([CocktailDetail].self, from: savedData) {
                 savedCocktails = loadedCocktails
             }
         }

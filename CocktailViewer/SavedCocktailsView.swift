@@ -11,19 +11,44 @@ struct SavedCocktailsView: View {
     @EnvironmentObject var viewModel: CocktailViewModel
     
     var body: some View {
-        NavigationView {
+        VStack {
             List {
-                ForEach(viewModel.savedCocktails.indices, id: \.self) { index in
-                    CocktailCardView(cocktail: viewModel.savedCocktails[index]) {
-                        // no "add to basket"
+                ForEach(viewModel.savedCocktails, id: \.id) { cocktail in
+                    NavigationLink(destination: CocktailDetailView(id: cocktail.id)) {
+                        HStack {
+                            AsyncImage(url: URL(string: cocktail.imageUrl)) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 50, height: 50)
+                                    .cornerRadius(8)
+                                    .padding(.trailing)
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            
+                            Spacer()
+                            
+                            Text(cocktail.name)
+                                .font(.headline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Spacer()
+                            
+                            Text(cocktail.category)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: 100, alignment: .leading)
+                        }
+                        .padding(.vertical, 8)
                     }
-                    .padding(.vertical, 5)
                 }
                 .onDelete(perform: removeSavedCocktail)
             }
-            .navigationTitle("Saved Cocktails")
-            .background(Color.white)
+            .listStyle(PlainListStyle())
         }
+        .applyGradientBackground()
+        .navigationTitle("Saved Cocktails")
     }
     
     func removeSavedCocktail(at offsets: IndexSet) {
@@ -32,7 +57,3 @@ struct SavedCocktailsView: View {
         }
     }
 }
-
-//#Preview {
-//    SavedCocktailsView(viewModel: CocktailViewModel())
-//}

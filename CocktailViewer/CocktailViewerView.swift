@@ -11,29 +11,21 @@ struct MainPageView: View {
     @EnvironmentObject var viewModel: CocktailViewModel
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20.0) {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
                             ForEach(viewModel.cocktails) { cocktail in
-                                NavigationLink(destination: CocktailDetailView(cocktail: cocktail)) {
-                                    CocktailCardView(cocktail: cocktail, onAddToBasket: {
-                                        viewModel.showAddToBasketOverlay(cocktail: cocktail)
-                                    })
+                                NavigationLink(destination: CocktailDetailView(id: cocktail.id)) {
+                                    CocktailCardView(cocktail: cocktail)
                                 }
-                                .frame(width: 250)
+                                .frame(width: 180)
                             }
                         }
                         .padding(.leading)
                     }
                     .padding(.vertical)
-                    
-                    Text("Discover Your Favorite Cocktails")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.purple)
-                        .padding(.leading, 16)
                     
                     Text("Categories for You")
                         .font(.headline)
@@ -92,16 +84,17 @@ struct MainPageView: View {
                         .padding(.horizontal)
                     }
                     .padding(.bottom)
+                    
+                    Text("Discover Your Favorite Cocktails")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.purple)
+                        .padding(.leading, 16)
                 }
             }
             .navigationTitle("Explore")
             .applyGradientBackground()
         }
-        .overlay(
-            viewModel.showOverlay ? AddToBasketOverlayView(cocktail: viewModel.selectedCocktail!, onConfirm: {
-                viewModel.addToBasket(cocktail: viewModel.selectedCocktail!)
-            }) : nil
-        )
     }
 }
 
