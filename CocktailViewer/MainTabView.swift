@@ -11,34 +11,100 @@ struct MainTabView: View {
     @Binding var isAuthenticated: Bool
     @EnvironmentObject var viewModel: CocktailViewModel
     
+    @State private var selectedTab: Tab = .home
+    
+    @State private var homeNavigationPath: [HomeNavigation] = []
+    @State private var searchNavigationPath: [SearchNavigation] = []
+    @State private var basketNavigationPath: [BasketNavigation] = []
+    @State private var profileNavigationPath: [ProfileNavigation] = []
+
     var body: some View {
-        ZStack {
-            TabView {
+        TabView(selection: tabSelection()) {
+            NavigationStack(path: $homeNavigationPath) {
                 MainPageView()
-                    .tabItem {
-                        Image(systemName: "house")
-                        Text("homeTabText")
-                    }
-                
-                SearchPageView()
-                    .tabItem {
-                        Image(systemName: "magnifyingglass")
-                        Text("searchTabText")
-                    }
-                
-                BasketPageView()
-                    .tabItem {
-                        Image(systemName: "cart")
-                        Text("basketTabText")
-                    }
-                    .badge(viewModel.basket.count)
-                
-                UserPageView(isAuthenticated: $isAuthenticated)
-                    .tabItem {
-                        Image(systemName: "person")
-                        Text("profileTabText")
+                    .navigationDestination(for: HomeNavigation.self) { destination in
+                        switch destination {
+                        case .cocktailDetail(let id):
+                            CocktailDetailView(id: id)
+                        case .category(let selectedCategory):
+                            FilteredCocktailsListView(filterType: .category, filterValue: selectedCategory)
+                        }
                     }
             }
+            .tabItem {
+                Image(systemName: "house")
+                Text("homeTabText")
+            }
+            .tag(Tab.home)
+            
+            NavigationStack(path: $searchNavigationPath) {
+                SearchPageView()
+                    .navigationDestination(for: SearchNavigation.self) { destination in
+                        switch destination {
+                        case .cocktailDetail(let id):
+                            CocktailDetailView(id: id)
+                        }
+                    }
+            }
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                Text("searchTabText")
+            }
+            .tag(Tab.search)
+            
+            NavigationStack(path: $basketNavigationPath) {
+                BasketPageView()
+                    .navigationDestination(for: BasketNavigation.self) { destination in
+                        switch destination {
+                        case .cocktailDetail(let id):
+                            CocktailDetailView(id: id)
+                        }
+                    }
+            }
+            .tabItem {
+                Image(systemName: "cart")
+                Text("basketTabText")
+            }
+            .badge(viewModel.basket.count)
+            .tag(Tab.basket)
+            
+            NavigationStack(path: $profileNavigationPath) {
+                UserPageView(isAuthenticated: $isAuthenticated)
+                    .navigationDestination(for: ProfileNavigation.self) { destination in
+                        switch destination {
+                        case .savedCocktails:
+                            SavedCocktailsView()
+                        case .cocktailDetail(let id):
+                            CocktailDetailView(id: id)
+                        }
+                    }
+            }
+            .tabItem {
+                Image(systemName: "person")
+                Text("profileTabText")
+            }
+            .tag(Tab.profile)
+        }
+    }
+}
+
+extension MainTabView {
+    private func tabSelection() -> Binding<Tab> {
+        Binding {
+            self.selectedTab
+        } set: { tappedTab in
+            switch self.selectedTab {
+            case .home:
+                homeNavigationPath = []
+            case .search:
+                searchNavigationPath = []
+            case.basket:
+                basketNavigationPath = []
+            case .profile:
+                profileNavigationPath = []
+            }
+            
+            self.selectedTab = tappedTab
         }
     }
 }

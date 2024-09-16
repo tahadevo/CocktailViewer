@@ -11,24 +11,22 @@ struct UserPageView: View {
     @Binding var isAuthenticated: Bool
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                List {
-                    NavigationLink(destination: SavedCocktailsView()) {
-                        Text("navTitleSavedCocktails")
-                    }
-                    
-                    Button(action: {
-                        isAuthenticated = false
-                    }) {
-                        Text("logoutText")
-                            .foregroundColor(.red)
-                    }
+        VStack {
+            List {
+                NavigationLink(value: ProfileNavigation.savedCocktails) {
+                    Text("navTitleSavedCocktails")
                 }
-                .listStyle(PlainListStyle())
+                
+                Button(action: {
+                    isAuthenticated = false
+                }) {
+                    Text("logoutText")
+                        .foregroundColor(.red)
+                }
             }
-            .applyGradientBackground()
-            .navigationTitle("navTitleProfile")
+            .listStyle(PlainListStyle())
         }
+        .applyGradientBackground()
+        .navigationTitle("navTitleProfile")
     }
 }

@@ -24,22 +24,19 @@ struct FilteredCocktailsListView: View {
     ]
     
     var body: some View {
-        let titleStr = filterType == FilterType.category ? "filterCategoryTitle" + " \(filterValue)" : "filterIngredientTitle" + " \(filterValue)"
+        let titleStr = filterType == FilterType.category ?
+            String(localized: "filterCategoryTitle", table: nil, bundle: .main, comment: "") + " \(filterValue)" :
+            String(localized: "filterIngredientTitle", table: nil, bundle: .main, comment: "") + " \(filterValue)"
         
         VStack {
-//                Text(titleStr)
-//                    .font(.title)
-//                    .fontWeight(.bold)
-//                    .multilineTextAlignment(.leading)
-            
             if viewModel.filteredCocktails.isEmpty {
                 Text("noCocktailsFoundMessage")
                     .multilineTextAlignment(.center)
             } else {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(viewModel.filteredCocktails, id: \.id) { cocktail in
-                            NavigationLink(destination: CocktailDetailView(id: cocktail.id)) {
+                        ForEach(viewModel.filteredCocktails) { cocktail in
+                            NavigationLink(value: HomeNavigation.cocktailDetail(id: cocktail.id)) {
                                 FilteredCocktailCardView(cocktail: cocktail)
                                     .frame(maxHeight: .infinity)
                             }
@@ -50,7 +47,15 @@ struct FilteredCocktailsListView: View {
             }
         }
         .applyGradientBackground()
-        .navigationTitle(titleStr)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(titleStr)
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+            }
+        }
         .onAppear {
             switch filterType {
             case .category:

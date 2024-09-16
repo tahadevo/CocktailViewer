@@ -88,3 +88,25 @@ struct FilteredCocktailListResponse: Decodable {
 struct CocktailDetailResponse: Decodable {
     let drinks: [CocktailDetail]?
 }
+
+enum Tab {
+    case home, search, basket, profile
+}
+
+enum HomeNavigation: Hashable {
+    case cocktailDetail(id: String)
+    case category(String)
+}
+
+enum SearchNavigation: Hashable {
+    case cocktailDetail(id: String)
+}
+
+enum BasketNavigation: Hashable {
+    case cocktailDetail(id: String)
+}
+
+enum ProfileNavigation: Hashable {
+    case savedCocktails
+    case cocktailDetail(id: String)
+}

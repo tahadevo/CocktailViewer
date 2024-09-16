@@ -12,6 +12,8 @@ struct LoginView: View {
     @State private var password = ""
     @State private var isAuthenticated = false
 
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         if isAuthenticated {
             MainTabView(isAuthenticated: $isAuthenticated)
@@ -21,23 +23,23 @@ struct LoginView: View {
                     Text("welcomeMessage")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .foregroundColor(.blue)
+                        .foregroundColor(colorScheme == .dark ? .yellow : .blue)
                         .padding(.bottom, 40)
                         .multilineTextAlignment(.center)
-                    
+
                     TextField("usernamePlaceholder", text: $username)
                         .padding()
-                        .background(Color(.white))
+                        .background(colorScheme == .dark ? Color(.systemGray5) : Color(.white))
                         .cornerRadius(10.0)
                         .padding(.horizontal)
                         .textInputAutocapitalization(.never)
-                    
+
                     SecureField("passwordPlaceholder", text: $password)
                         .padding()
-                        .background(Color(.white))
+                        .background(colorScheme == .dark ? Color(.systemGray5) : Color(.white))
                         .cornerRadius(10.0)
                         .padding(.horizontal)
-                    
+
                     Button(action: {
                         if username == "user" && password == "password" {
                             username = ""
@@ -59,7 +61,11 @@ struct LoginView: View {
                 }
                 .padding()
                 .frame(width: geometry.size.width, height: geometry.size.height)
-                .applyGradientBackground()
+                .background(
+                    colorScheme == .dark ?
+                    LinearGradient(gradient: Gradient(colors: [Color.black, Color.gray]), startPoint: .top, endPoint: .bottom) :
+                    LinearGradient(gradient: Gradient(colors: [Color.pink.opacity(0.3), Color.white.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
+                )
             }
         }
     }

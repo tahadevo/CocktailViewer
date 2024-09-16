@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct CocktailCardView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     var cocktail: Cocktail
     
     var body: some View {
@@ -24,17 +26,32 @@ struct CocktailCardView: View {
             
             Text(cocktail.name)
                 .font(.headline)
-                .foregroundColor(.purple)
+                .foregroundColor(textColor(for: colorScheme))
             
             Text(cocktail.category)
                 .font(.subheadline)
-                .foregroundColor(.purple.opacity(0.8))
+                .foregroundColor(textColor(for: colorScheme).opacity(0.8))
         }
         .padding()
         .background(
-            LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.white.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
+            LinearGradient(gradient: Gradient(colors: cardBackgroundColors(for: colorScheme)), startPoint: .top, endPoint: .bottom)
         )
         .cornerRadius(15.0)
         .frame(width: 250, height: 300)
+    }
+    
+    private func cardBackgroundColors(for colorScheme: ColorScheme) -> [Color] {
+        switch colorScheme {
+        case .light:
+            return [Color.blue.opacity(0.3), Color.white.opacity(0.8)]
+        case .dark:
+            return [Color.pink.opacity(0.4), Color.red.opacity(0.4)]
+        @unknown default:
+            return [Color.blue.opacity(0.3), Color.white.opacity(0.8)]
+        }
+    }
+    
+    private func textColor(for colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? Color.white : Color.purple
     }
 }

@@ -14,7 +14,7 @@ struct SavedCocktailsView: View {
         VStack {
             List {
                 ForEach(viewModel.savedCocktails, id: \.id) { cocktail in
-                    NavigationLink(destination: CocktailDetailView(id: cocktail.id)) {
+                    NavigationLink(value: ProfileNavigation.cocktailDetail(id: cocktail.id)) {
                         HStack {
                             AsyncImage(url: URL(string: cocktail.imageUrl)) { image in
                                 image
