@@ -18,21 +18,21 @@ struct LoginView: View {
         } else {
             GeometryReader { geometry in
                 VStack {
-                    Text("Welcome to Cocktail Viewer")
+                    Text("welcomeMessage")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.blue)
                         .padding(.bottom, 40)
                         .multilineTextAlignment(.center)
                     
-                    TextField("Username", text: $username)
+                    TextField("usernamePlaceholder", text: $username)
                         .padding()
                         .background(Color(.white))
                         .cornerRadius(10.0)
                         .padding(.horizontal)
                         .textInputAutocapitalization(.never)
                     
-                    SecureField("Password", text: $password)
+                    SecureField("passwordPlaceholder", text: $password)
                         .padding()
                         .background(Color(.white))
                         .cornerRadius(10.0)
@@ -45,7 +45,7 @@ struct LoginView: View {
                             isAuthenticated = true
                         }
                     }) {
-                        Text("Login")
+                        Text("loginButtonText")
                             .font(.headline)
                             .foregroundColor(.white)
                             .padding()

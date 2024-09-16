@@ -15,20 +15,20 @@ struct UserPageView: View {
             VStack {
                 List {
                     NavigationLink(destination: SavedCocktailsView()) {
-                        Text("Saved Cocktails")
+                        Text("navTitleSavedCocktails")
                     }
                     
                     Button(action: {
                         isAuthenticated = false
                     }) {
-                        Text("Log Out")
+                        Text("logoutText")
                             .foregroundColor(.red)
                     }
                 }
                 .listStyle(PlainListStyle())
             }
             .applyGradientBackground()
-            .navigationTitle("Profile")
+            .navigationTitle("navTitleProfile")
         }
     }
 }

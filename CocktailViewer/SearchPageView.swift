@@ -15,7 +15,7 @@ struct SearchPageView: View {
         NavigationStack {
             VStack {
                 HStack {
-                    TextField("Search cocktails...", text: $searchText)
+                    TextField("searchBarPlaceholder", text: $searchText)
                         .textInputAutocapitalization(.never)
                         .padding(.vertical, 10)
                         .padding(.leading, 20)
@@ -74,7 +74,7 @@ struct SearchPageView: View {
                 .listStyle(PlainListStyle())
             }
             .applyGradientBackground()
-            .navigationTitle("Search")
+            .navigationTitle("navTitleSearch")
         }
     }
 }

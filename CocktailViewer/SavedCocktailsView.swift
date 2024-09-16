@@ -48,7 +48,7 @@ struct SavedCocktailsView: View {
             .listStyle(PlainListStyle())
         }
         .applyGradientBackground()
-        .navigationTitle("Saved Cocktails")
+        .navigationTitle("navTitleSavedCocktails")
     }
     
     func removeSavedCocktail(at offsets: IndexSet) {

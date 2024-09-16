@@ -27,7 +27,7 @@ struct MainPageView: View {
                     }
                     .padding(.vertical)
                     
-                    Text("Categories for You")
+                    Text("homepageTitleCategories")
                         .font(.headline)
                         .padding(.leading)
                     
@@ -55,7 +55,7 @@ struct MainPageView: View {
                     
                     Spacer()
                     
-                    Text("Ingredients You Might Like")
+                    Text("homepageTitleIngredients")
                         .font(.headline)
                         .padding(.leading)
                     
@@ -85,14 +85,14 @@ struct MainPageView: View {
                     }
                     .padding(.bottom)
                     
-                    Text("Discover Your Favorite Cocktails")
+                    Text("homepageTitleDiscover")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.purple)
                         .padding(.leading, 16)
                 }
             }
-            .navigationTitle("Explore")
+            .navigationTitle("navTitleHome")
             .applyGradientBackground()
             .onAppear {
                 Task {

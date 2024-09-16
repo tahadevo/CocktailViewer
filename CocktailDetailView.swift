@@ -32,48 +32,48 @@ struct CocktailDetailView: View {
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                             
-                            Text("Category: \(cocktail.category)")
+                            Text("categoryTitle" + " \(cocktail.category)")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                             
                             if let glass = cocktail.glass {
-                                Text("Glass: \(glass)")
+                                Text("glassTitle" + " \(glass)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             } else {
-                                Text("Glass: No info")
+                                Text("glassTitleNoInfo")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
                             
                             if let alcoholic = cocktail.alcoholic {
-                                Text("Alcohol Type: \(alcoholic)")
+                                Text("alcoholTypeTitle" + " \(alcoholic)")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             } else {
-                                Text("Alcohol Type: No info")
+                                Text("alcoholTypeTitleNoInfo")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
                             
                             Divider()
                             
-                            Text("Instructions")
+                            Text("instructionsTitle")
                                 .font(.headline)
                             if let instructions = cocktail.instructions {
                                 Text(instructions)
                                     .padding(.bottom)
                             } else {
-                                Text("No info")
+                                Text("defaultNoInfo")
                                     .padding(.bottom)
                             }
                             
-                            Text("Ingredients")
+                            Text("ingredientsTitle")
                                 .font(.headline)
                             if let ingredient1 = cocktail.ingredient1, let ingredient2 = cocktail.ingredient2 {
                                 Text("\(ingredient1), \(ingredient2)")
                             } else {
-                                Text("No info")
+                                Text("defaultNoInfo")
                             }
                         }
                         .padding()
@@ -81,7 +81,7 @@ struct CocktailDetailView: View {
                         Button(action: {
                             viewModel.addToBasket(cocktail: cocktail)
                         }) {
-                            Text("Add to Basket")
+                            Text("addToBasketButtonText")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
@@ -96,7 +96,7 @@ struct CocktailDetailView: View {
                     .padding()
                 }
             } else {
-                ProgressView("Loading cocktail details...")
+                ProgressView("progressCocktailDetails")
             }
         }
         .onAppear {
@@ -105,7 +105,7 @@ struct CocktailDetailView: View {
             }
         }
         .applyGradientBackground()
-        .navigationTitle("Cocktail Details")
+        .navigationTitle("navTitleCocktailDetails")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

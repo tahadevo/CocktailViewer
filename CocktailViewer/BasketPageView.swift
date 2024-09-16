@@ -49,7 +49,7 @@ struct BasketPageView: View {
                     .listStyle(PlainListStyle())
                     
                     Button(action: viewModel.saveCocktailsToSaved) {
-                        Text("Save Cocktails in Basket")
+                        Text("saveCocktailsButtonText")
                             .font(.headline)
                             .foregroundColor(.white)
                             .padding()
@@ -59,7 +59,7 @@ struct BasketPageView: View {
                     .buttonStyle(BorderlessButtonStyle())
                     .padding()
                 } else {
-                    Text("No Items in the Basket")
+                    Text("noItemsInBasketText")
                         .font(.title)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
@@ -68,7 +68,7 @@ struct BasketPageView: View {
                 }
             }
             .applyGradientBackground()
-            .navigationTitle("Basket")
+            .navigationTitle("navTitleBasket")
         }
     }
 }

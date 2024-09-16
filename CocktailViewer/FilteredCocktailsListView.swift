@@ -24,7 +24,7 @@ struct FilteredCocktailsListView: View {
     ]
     
     var body: some View {
-        let titleStr = filterType == FilterType.category ? "Cocktails in \(filterValue) Category" : "Cocktails with \(filterValue)"
+        let titleStr = filterType == FilterType.category ? "filterCategoryTitle" + " \(filterValue)" : "filterIngredientTitle" + " \(filterValue)"
         
         VStack {
 //                Text(titleStr)
@@ -33,7 +33,7 @@ struct FilteredCocktailsListView: View {
 //                    .multilineTextAlignment(.leading)
             
             if viewModel.filteredCocktails.isEmpty {
-                Text("No cocktails found.")
+                Text("noCocktailsFoundMessage")
                     .multilineTextAlignment(.center)
             } else {
                 ScrollView {

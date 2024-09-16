@@ -17,26 +17,26 @@ struct MainTabView: View {
                 MainPageView()
                     .tabItem {
                         Image(systemName: "house")
-                        Text("Home")
+                        Text("homeTabText")
                     }
                 
                 SearchPageView()
                     .tabItem {
                         Image(systemName: "magnifyingglass")
-                        Text("Search")
+                        Text("searchTabText")
                     }
                 
                 BasketPageView()
                     .tabItem {
                         Image(systemName: "cart")
-                        Text("Basket")
+                        Text("basketTabText")
                     }
                     .badge(viewModel.basket.count)
                 
                 UserPageView(isAuthenticated: $isAuthenticated)
                     .tabItem {
                         Image(systemName: "person")
-                        Text("Profile")
+                        Text("profileTabText")
                     }
             }
         }
