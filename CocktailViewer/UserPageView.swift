@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct UserPageView: View {
+    @Binding var isAuthenticated: Bool
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -16,8 +18,11 @@ struct UserPageView: View {
                         Text("Saved Cocktails")
                     }
                     
-                    Button("Log Out") {
-                        //handle
+                    Button(action: {
+                        isAuthenticated = false
+                    }) {
+                        Text("Log Out")
+                            .foregroundColor(.red)
                     }
                 }
                 .listStyle(PlainListStyle())

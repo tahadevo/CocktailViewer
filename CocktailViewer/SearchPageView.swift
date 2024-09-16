@@ -25,7 +25,9 @@ struct SearchPageView: View {
                         .padding(.leading)
                     
                     Button(action: {
-                        submitSearch()
+                        Task {
+                            await viewModel.fetchCocktails(searchTerm: searchText)
+                        }
                     }) {
                         Image(systemName: "magnifyingglass")
                             .padding(10)
@@ -74,10 +76,6 @@ struct SearchPageView: View {
             .applyGradientBackground()
             .navigationTitle("Search")
         }
-    }
-    
-    private func submitSearch() {
-        viewModel.fetchCocktails(searchTerm: searchText)
     }
 }
 

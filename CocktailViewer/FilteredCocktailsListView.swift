@@ -54,9 +54,13 @@ struct FilteredCocktailsListView: View {
         .onAppear {
             switch filterType {
             case .category:
-                viewModel.fetchCocktailsByCategory(category: filterValue)
+                Task {
+                    await viewModel.fetchCocktailsByCategory(category: filterValue)
+                }
             case .ingredient:
-                viewModel.fetchCocktailsByIngredient(ingredient: filterValue)
+                Task {
+                    await viewModel.fetchCocktailsByIngredient(ingredient: filterValue)
+                }
             }
         }
     }

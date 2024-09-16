@@ -77,10 +77,14 @@ struct Ingredient: Decodable {
     let strIngredient1: String
 }
 
+struct CocktailResponse: Decodable {
+    let drinks: [Cocktail]?
+}
+
 struct FilteredCocktailListResponse: Decodable {
-    let drinks: [FilteredCocktail]
+    let drinks: [FilteredCocktail]?
 }
 
 struct CocktailDetailResponse: Decodable {
-    let drinks: [CocktailDetail]
+    let drinks: [CocktailDetail]?
 }

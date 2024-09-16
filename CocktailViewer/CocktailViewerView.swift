@@ -94,6 +94,11 @@ struct MainPageView: View {
             }
             .navigationTitle("Explore")
             .applyGradientBackground()
+            .onAppear {
+                Task {
+                    await viewModel.initializeData()
+                }
+            }
         }
     }
 }

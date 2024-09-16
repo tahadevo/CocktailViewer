@@ -24,7 +24,6 @@
 		D2099A262C8B322C006D79B0 /* CocktailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2099A252C8B322C006D79B0 /* CocktailModel.swift */; };
 		D2099A282C8B32E2006D79B0 /* CocktailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2099A272C8B32E2006D79B0 /* CocktailViewModel.swift */; };
 		D2099A2A2C8B3593006D79B0 /* CocktailViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2099A292C8B3593006D79B0 /* CocktailViewerView.swift */; };
-		D26EE4432C917DE70037C541 /* BadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26EE4422C917DE70037C541 /* BadgeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,7 +45,6 @@
 		D2099A252C8B322C006D79B0 /* CocktailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailModel.swift; sourceTree = "<group>"; };
 		D2099A272C8B32E2006D79B0 /* CocktailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailViewModel.swift; sourceTree = "<group>"; };
 		D2099A292C8B3593006D79B0 /* CocktailViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailViewerView.swift; sourceTree = "<group>"; };
-		D26EE4422C917DE70037C541 /* BadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +87,6 @@
 				D205F4562C8F1CC4003389B3 /* BasketPageView.swift */,
 				D205F44A2C8EF31F003389B3 /* CocktailCardView.swift */,
 				D205F4522C8F1B67003389B3 /* MainTabView.swift */,
-				D26EE4422C917DE70037C541 /* BadgeView.swift */,
 				D205F4582C8F1CD5003389B3 /* UserPageView.swift */,
 				D205F44E2C8EF903003389B3 /* LoginView.swift */,
 				D2099A252C8B322C006D79B0 /* CocktailModel.swift */,
@@ -187,7 +184,6 @@
 				D205F4612C906838003389B3 /* FilteredCocktailsListView.swift in Sources */,
 				D205F4632C907492003389B3 /* FilteredCocktailCardView.swift in Sources */,
 				D2099A282C8B32E2006D79B0 /* CocktailViewModel.swift in Sources */,
-				D26EE4432C917DE70037C541 /* BadgeView.swift in Sources */,
 				D205F4592C8F1CD5003389B3 /* UserPageView.swift in Sources */,
 				D205F4532C8F1B67003389B3 /* MainTabView.swift in Sources */,
 				D2099A262C8B322C006D79B0 /* CocktailModel.swift in Sources */,

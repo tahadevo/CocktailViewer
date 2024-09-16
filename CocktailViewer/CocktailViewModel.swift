@@ -19,112 +19,171 @@ class CocktailViewModel: ObservableObject {
     
     @Published var filteredCocktails: [FilteredCocktail] = []
     @Published var cocktailDetail: CocktailDetail?
+    
+    @Published var isLoading: Bool = false
 
     private let userDefaultsKey = "savedCocktails"
-    private var cancellables = Set<AnyCancellable>()
-    private let baseUrl = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s="
+    private let baseUrl = "https://www.thecocktaildb.com/api/json/v1/1/"
     
     init() {
-        fetchCocktails(searchTerm: "")
-        fetchCategories()
-        fetchIngredients()
         loadSavedCocktails()
     }
     
-    func fetchCocktails(searchTerm: String) {
-        guard let url = URL(string: "\(baseUrl)\(searchTerm)") else { return }
-        
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: [String: [Cocktail]].self, decoder: JSONDecoder())
-            .map { $0["drinks"] ?? [] }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                print(completion)
-            }, receiveValue: { [weak self] cocktails in
-                searchTerm == "" ? (self?.cocktails = cocktails) : (self?.searchedCocktails = cocktails)
-            })
-            .store(in: &cancellables)
+    func initializeData() async {
+        await fetchCocktails(searchTerm: "")
+        await fetchCategories()
+        await fetchIngredients()
     }
     
-    func fetchCategories() {
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list") else { return }
+    func fetchCocktails(searchTerm: String) async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
         
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data, error == nil else { return }
-            
-            if let categoryResponse = try? JSONDecoder().decode(CategoryListResponse.self, from: data) {
-                DispatchQueue.main.async {
-                    self.categories = categoryResponse.drinks.map { $0.strCategory }
-                }
-            }
-        }.resume()
-    }
-    
-    func fetchIngredients() {
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list") else { return }
-        
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data, error == nil else { return }
-            
-            if let ingredientResponse = try? JSONDecoder().decode(IngredientListResponse.self, from: data) {
-                DispatchQueue.main.async {
-                    self.ingredients = ingredientResponse.drinks.map { $0.strIngredient1 }
-                }
-            }
-        }.resume()
-    }
-    
-    func fetchCocktailsByCategory(category: String) {
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=\(category.replacingOccurrences(of: " ", with: "_"))") else { return }
-        
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data, error == nil else { return }
-            
-            if let cocktailResponse = try? JSONDecoder().decode(FilteredCocktailListResponse.self, from: data) {
-                DispatchQueue.main.async {
-                    self.filteredCocktails = cocktailResponse.drinks
-                }
-            }
-        }.resume()
-    }
-    
-    func fetchCocktailsByIngredient(ingredient: String) {
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=\(ingredient)") else { return }
-        
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data, error == nil else { return }
-            
-            if let cocktailResponse = try? JSONDecoder().decode(FilteredCocktailListResponse.self, from: data) {
-                DispatchQueue.main.async {
-                    self.filteredCocktails = cocktailResponse.drinks
-                }
-            }
-        }.resume()
-    }
-    
-    func fetchCocktailDetail(by id: String) {
-        let urlString = "https://thecocktaildb.com/api/json/v1/1/lookup.php?i=\(id)"
-        guard let url = URL(string: urlString) else {
+        guard let url = URL(string: "\(baseUrl)search.php?s=\(searchTerm)") else {
             print("Invalid URL")
             return
         }
         
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: CocktailDetailResponse.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("Error fetching cocktail details: \(error.localizedDescription)")
-                case .finished:
-                    break
-                }
-            }, receiveValue: { [weak self] response in
-                self?.cocktailDetail = response.drinks.first
-            })
-            .store(in: &cancellables)
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decodedResponse = try JSONDecoder().decode(CocktailResponse.self, from: data)
+            DispatchQueue.main.async {
+                searchTerm == "" ? (self.cocktails = decodedResponse.drinks ?? []) : (self.searchedCocktails = decodedResponse.drinks ?? [])
+                self.isLoading = false
+            }
+        } catch {
+            print("Failed to fetch cocktails: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+    
+    func fetchCategories() async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        guard let url = URL(string: "\(baseUrl)list.php?c=list") else {
+            print("Invalid URL")
+            return
+        }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decodedResponse = try JSONDecoder().decode(CategoryListResponse.self, from: data)
+            DispatchQueue.main.async {
+                self.categories = decodedResponse.drinks.map { $0.strCategory }
+                self.isLoading = false
+            }
+        } catch {
+            print("Failed to fetch categories: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+    
+    func fetchIngredients() async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        guard let url = URL(string: "\(baseUrl)list.php?i=list") else {
+            print("Invalid URL")
+            return
+        }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decodedResponse = try JSONDecoder().decode(IngredientListResponse.self, from: data)
+            DispatchQueue.main.async {
+                self.ingredients = decodedResponse.drinks.map { $0.strIngredient1 }
+                self.isLoading = false
+            }
+        } catch {
+            print("Failed to fetch categories: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+
+    }
+    
+    func fetchCocktailsByCategory(category: String) async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        guard let url = URL(string: "\(baseUrl)filter.php?c=\(category.replacingOccurrences(of: " ", with: "_"))") else {
+            print("Invalid URL")
+            return
+        }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decodedResponse = try JSONDecoder().decode(FilteredCocktailListResponse.self, from: data)
+            DispatchQueue.main.async {
+                self.filteredCocktails = decodedResponse.drinks ?? []
+                self.isLoading = false
+            }
+        } catch {
+            print("Failed to fetch category-filtered cocktails: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+    
+    func fetchCocktailsByIngredient(ingredient: String) async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        guard let url = URL(string: "\(baseUrl)filter.php?i=\(ingredient)") else {
+            print("Invalid URL")
+            return
+        }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decodedResponse = try JSONDecoder().decode(FilteredCocktailListResponse.self, from: data)
+            DispatchQueue.main.async {
+                self.filteredCocktails = decodedResponse.drinks ?? []
+                self.isLoading = false
+            }
+        } catch {
+            print("Failed to fetch ingredient-filtered cocktails: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+    
+    func fetchCocktailDetail(by id: String) async {
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        guard let url = URL(string: "\(baseUrl)lookup.php?i=\(id)") else {
+            print("Invalid URL")
+            return
+        }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decodedResponse = try JSONDecoder().decode(CocktailDetailResponse.self, from: data)
+            DispatchQueue.main.async {
+                self.cocktailDetail = decodedResponse.drinks?.first
+                self.isLoading = false
+            }
+        } catch {
+            print("Failed to fetch cocktail detail: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
     }
     
     func saveCocktailsToSaved() {

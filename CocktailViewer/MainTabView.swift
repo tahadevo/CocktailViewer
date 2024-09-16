@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @Binding var isAuthenticated: Bool
     @EnvironmentObject var viewModel: CocktailViewModel
     
     var body: some View {
@@ -30,21 +31,26 @@ struct MainTabView: View {
                         Image(systemName: "cart")
                         Text("Basket")
                     }
+                    .badge(viewModel.basket.count)
                 
-                UserPageView()
+                UserPageView(isAuthenticated: $isAuthenticated)
                     .tabItem {
                         Image(systemName: "person")
                         Text("Profile")
                     }
             }
-            
-            BadgeView(count: viewModel.basket.count)
-                .offset(x: 55, y: 350)
         }
     }
 }
 
 #Preview {
-    MainTabView()
-        .environmentObject(CocktailViewModel())
+    struct Preview: View {
+        @State var isAuthenticated = true
+        var body: some View {
+            MainTabView(isAuthenticated: $isAuthenticated)
+                .environmentObject(CocktailViewModel())
+        }
+    }
+    
+    return Preview()
 }

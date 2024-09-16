@@ -100,7 +100,9 @@ struct CocktailDetailView: View {
             }
         }
         .onAppear {
-            viewModel.fetchCocktailDetail(by: id)
+            Task {
+                await viewModel.fetchCocktailDetail(by: id)
+            }
         }
         .applyGradientBackground()
         .navigationTitle("Cocktail Details")
