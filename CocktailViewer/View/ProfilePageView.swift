@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UserPageView: View {
+struct ProfilePageView: View {
     @Binding var isAuthenticated: Bool
     
     var body: some View {

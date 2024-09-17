@@ -21,7 +21,7 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: tabSelection()) {
             NavigationStack(path: $homeNavigationPath) {
-                MainPageView()
+                HomepageView()
                     .navigationDestination(for: HomeNavigation.self) { destination in
                         switch destination {
                         case .cocktailDetail(let id):
@@ -71,7 +71,7 @@ struct MainTabView: View {
             .tag(Tab.basket)
             
             NavigationStack(path: $profileNavigationPath) {
-                UserPageView(isAuthenticated: $isAuthenticated)
+                ProfilePageView(isAuthenticated: $isAuthenticated)
                     .navigationDestination(for: ProfileNavigation.self) { destination in
                         switch destination {
                         case .savedCocktails:

@@ -1,5 +1,5 @@
 //
-//  CocktailViewerView.swift
+//  HomepageView.swift
 //  CocktailViewer
 //
 //  Created by Taha Emir Gökçegöz on 6.09.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MainPageView: View {
+struct HomepageView: View {
     @EnvironmentObject var viewModel: CocktailViewModel
     @State private var isLandscape: Bool = UIDevice.current.orientation.isLandscape
     
@@ -106,6 +106,6 @@ struct MainPageView: View {
 }
 
 //#Preview {
-//    MainPageView()
+//    HomepageView()
 //        .environmentObject(CocktailViewModel())
 //}
