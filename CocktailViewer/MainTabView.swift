@@ -28,6 +28,8 @@ struct MainTabView: View {
                             CocktailDetailView(id: id)
                         case .category(let selectedCategory):
                             FilteredCocktailsListView(filterType: .category, filterValue: selectedCategory)
+                        case .ingredient(let selectedIngredient):
+                            FilteredCocktailsListView(filterType: .ingredient, filterValue: selectedIngredient)
                         }
                     }
             }

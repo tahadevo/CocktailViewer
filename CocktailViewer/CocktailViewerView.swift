@@ -68,7 +68,7 @@ struct MainPageView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: isLandscape ? 8 : 16) {
                         ForEach(viewModel.ingredients, id: \.self) { ingredient in
-                            NavigationLink(destination: FilteredCocktailsListView(filterType: .ingredient, filterValue: ingredient)) {
+                            NavigationLink(value: HomeNavigation.ingredient(ingredient)) {
                                 VStack {
                                     AsyncImage(url: URL(string: "https://www.thecocktaildb.com/images/ingredients/\(ingredient)-Small.png")) { image in
                                         image

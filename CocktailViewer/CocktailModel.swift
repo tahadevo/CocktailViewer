@@ -96,6 +96,7 @@ enum Tab {
 enum HomeNavigation: Hashable {
     case cocktailDetail(id: String)
     case category(String)
+    case ingredient(String)
 }
 
 enum SearchNavigation: Hashable {
