@@ -201,8 +201,8 @@ class CocktailViewModel: ObservableObject {
         basket.append(cocktail)
     }
     
-    func removeFromBasket(cocktail: CocktailDetail) {
-        basket.removeAll { $0.id == cocktail.id }
+    func removeFromBasket(at index: Int) {
+        basket.remove(at: index)
     }
     
     func clearSavedCocktails() {

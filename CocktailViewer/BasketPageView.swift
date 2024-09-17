@@ -15,34 +15,43 @@ struct BasketPageView: View {
             if viewModel.basket.count > 0 {
                 List {
                     ForEach(viewModel.basket, id: \.id) { cocktail in
-                        NavigationLink(value: BasketNavigation.cocktailDetail(id: cocktail.id)) {
-                            HStack {
-                                AsyncImage(url: URL(string: cocktail.imageUrl)) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 50, height: 50)
-                                        .cornerRadius(8)
-                                        .padding(.trailing)
-                                } placeholder: {
-                                    ProgressView()
-                                }
-                                
-                                Spacer()
-                                
+                        HStack {
+                            AsyncImage(url: URL(string: cocktail.imageUrl)) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 50, height: 50)
+                                    .cornerRadius(8)
+                                    .padding(.trailing)
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .leading) {
                                 Text(cocktail.name)
                                     .font(.headline)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                Spacer()
                                 
                                 Text(cocktail.category)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                                     .frame(maxWidth: 100, alignment: .leading)
                             }
-                            .padding(.vertical, 8)
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                removeCocktailFromBasket(cocktail: cocktail)
+                            }) {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                                    .padding(.leading)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
                         }
+                        .padding(.vertical, 8)
                     }
                 }
                 .listStyle(PlainListStyle())
@@ -68,5 +77,11 @@ struct BasketPageView: View {
         }
         .applyGradientBackground()
         .navigationTitle("navTitleBasket")
+    }
+    
+    func removeCocktailFromBasket(cocktail: CocktailDetail) {
+        if let index = viewModel.basket.firstIndex(where: { $0.id == cocktail.id }) {
+            viewModel.removeFromBasket(at: index)
+        }
     }
 }

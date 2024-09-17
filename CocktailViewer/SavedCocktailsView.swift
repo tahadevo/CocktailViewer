@@ -39,11 +39,21 @@ struct SavedCocktailsView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .frame(maxWidth: 100, alignment: .leading)
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                removeCocktailFromSaved(cocktail: cocktail)
+                            }) {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                                    .padding(.leading)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
                         }
                         .padding(.vertical, 8)
                     }
                 }
-                .onDelete(perform: removeSavedCocktail)
             }
             .listStyle(PlainListStyle())
         }
@@ -51,8 +61,8 @@ struct SavedCocktailsView: View {
         .navigationTitle("navTitleSavedCocktails")
     }
     
-    func removeSavedCocktail(at offsets: IndexSet) {
-        offsets.forEach { index in
+    func removeCocktailFromSaved(cocktail: CocktailDetail) {
+        if let index = viewModel.savedCocktails.firstIndex(where: { $0.id == cocktail.id }) {
             viewModel.removeSavedCocktail(at: index)
         }
     }

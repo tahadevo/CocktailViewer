@@ -14,10 +14,19 @@ enum FilterType {
 
 struct FilteredCocktailsListView: View {
     @EnvironmentObject var viewModel: CocktailViewModel
+    @State private var isLandscape: Bool = UIDevice.current.orientation.isLandscape
     var filterType: FilterType
     var filterValue: String
     
     let columns = [
+        GridItem(.flexible(), spacing: 20),
+        GridItem(.flexible(), spacing: 20),
+        GridItem(.flexible(), spacing: 20)
+    ]
+    
+    let landscapeColumns = [
+        GridItem(.flexible(), spacing: 20),
+        GridItem(.flexible(), spacing: 20),
         GridItem(.flexible(), spacing: 20),
         GridItem(.flexible(), spacing: 20),
         GridItem(.flexible(), spacing: 20)
@@ -34,7 +43,7 @@ struct FilteredCocktailsListView: View {
                     .multilineTextAlignment(.center)
             } else {
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 10) {
+                    LazyVGrid(columns: isLandscape ? landscapeColumns : columns, spacing: 10) {
                         ForEach(viewModel.filteredCocktails) { cocktail in
                             NavigationLink(value: HomeNavigation.cocktailDetail(id: cocktail.id)) {
                                 FilteredCocktailCardView(cocktail: cocktail)
@@ -55,6 +64,9 @@ struct FilteredCocktailsListView: View {
                     .lineLimit(2)
                     .minimumScaleFactor(0.8)
             }
+        }
+        .onRotate { newOrientation in
+            isLandscape = newOrientation.isLandscape
         }
         .onAppear {
             switch filterType {

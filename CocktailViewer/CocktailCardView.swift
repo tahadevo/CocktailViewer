@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CocktailCardView: View {
     @Environment(\.colorScheme) var colorScheme
+    @State private var isLandscape: Bool = UIDevice.current.orientation.isLandscape
     
     var cocktail: Cocktail
     
@@ -17,7 +18,7 @@ struct CocktailCardView: View {
             AsyncImage(url: URL(string: cocktail.imageUrl)) { image in
                 image.resizable()
                     .scaledToFit()
-                    .frame(height: 150)
+                    .frame(height: isLandscape ? 100 : 150)
                     .cornerRadius(10.0)
             } placeholder: {
                 ProgressView()
@@ -37,7 +38,10 @@ struct CocktailCardView: View {
             LinearGradient(gradient: Gradient(colors: cardBackgroundColors(for: colorScheme)), startPoint: .top, endPoint: .bottom)
         )
         .cornerRadius(15.0)
-        .frame(width: 250, height: 300)
+        .frame(width: isLandscape ? 200 : 250, height: isLandscape ? 250 : 300)
+        .onRotate { newOrientation in
+            isLandscape = newOrientation.isLandscape
+        }
     }
     
     private func cardBackgroundColors(for colorScheme: ColorScheme) -> [Color] {
