@@ -61,11 +61,7 @@ struct LoginView: View {
                 }
                 .padding()
                 .frame(width: geometry.size.width, height: geometry.size.height)
-                .background(
-                    colorScheme == .dark ?
-                    LinearGradient(gradient: Gradient(colors: [Color.black, Color.gray]), startPoint: .top, endPoint: .bottom) :
-                    LinearGradient(gradient: Gradient(colors: [Color.pink.opacity(0.3), Color.white.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
-                )
+                .applyGradientBackground()
             }
         }
     }
