@@ -12,8 +12,6 @@ struct LoginView: View {
     @State private var password = ""
     @State private var isAuthenticated = false
 
-    @Environment(\.colorScheme) var colorScheme
-
     var body: some View {
         if isAuthenticated {
             MainTabView(isAuthenticated: $isAuthenticated)
@@ -23,20 +21,20 @@ struct LoginView: View {
                     Text("welcomeMessage")
                         .font(.largeTitle)
                         .fontWeight(.bold)
-                        .foregroundColor(colorScheme == .dark ? .yellow : .blue)
+                        .foregroundColor(Color("WelcomeTitleColor"))
                         .padding(.bottom, 40)
                         .multilineTextAlignment(.center)
 
                     TextField("usernamePlaceholder", text: $username)
                         .padding()
-                        .background(colorScheme == .dark ? Color(.systemGray5) : Color(.white))
+                        .background(Color("TextFieldColor"))
                         .cornerRadius(10.0)
                         .padding(.horizontal)
                         .textInputAutocapitalization(.never)
 
                     SecureField("passwordPlaceholder", text: $password)
                         .padding()
-                        .background(colorScheme == .dark ? Color(.systemGray5) : Color(.white))
+                        .background(Color("TextFieldColor"))
                         .cornerRadius(10.0)
                         .padding(.horizontal)
 
