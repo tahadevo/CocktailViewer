@@ -74,6 +74,10 @@ struct SearchPageView: View {
         }
         .applyGradientBackground()
         .navigationTitle("navTitleSearch")
+        .onDisappear {
+            searchText = ""
+            viewModel.clearSearchedCocktails()
+        }
     }
 }
 

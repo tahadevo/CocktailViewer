@@ -8,18 +8,18 @@
 import Foundation
 
 class CocktailViewModel: ObservableObject {
-    @Published var cocktails: [Cocktail] = []
-    @Published var searchedCocktails: [Cocktail] = []
-    @Published var categories: [String] = []
-    @Published var ingredients: [String] = []
+    @Published private(set) var cocktails: [Cocktail] = []
+    @Published private(set) var searchedCocktails: [Cocktail] = []
+    @Published private(set) var categories: [String] = []
+    @Published private(set) var ingredients: [String] = []
     
-    @Published var savedCocktails: [CocktailDetail] = []
-    @Published var basket: [CocktailDetail] = []
+    @Published private(set) var savedCocktails: [CocktailDetail] = []
+    @Published private(set) var basket: [CocktailDetail] = []
     
-    @Published var filteredCocktails: [FilteredCocktail] = []
-    @Published var cocktailDetail: CocktailDetail?
+    @Published private(set) var filteredCocktails: [FilteredCocktail] = []
+    @Published private(set) var cocktailDetail: CocktailDetail?
     
-    @Published var isLoading: Bool = false
+    @Published private(set) var isLoading: Bool = false
 
     private let userDefaultsKey = "savedCocktails"
     private let baseUrl = "https://www.thecocktaildb.com/api/json/v1/1/"
@@ -207,6 +207,10 @@ class CocktailViewModel: ObservableObject {
     func clearSavedCocktails() {
         savedCocktails.removeAll()
         saveCocktailsToUserDefaults()
+    }
+    
+    func clearSearchedCocktails() {
+        searchedCocktails.removeAll()
     }
     
     private func saveCocktailsToUserDefaults() {
