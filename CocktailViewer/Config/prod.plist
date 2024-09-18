@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>APIBaseURL</key>
+	<string>https://www.thecocktaildb.com/api/json/v1/1/</string>
+	<key>APISearchURL</key>
+	<string>https://www.thecocktaildb.com/api/json/v1/1/search.php?s=</string>
+	<key>APICategoryListURL</key>
+	<string>https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list</string>
+	<key>APICategoryFilterURL</key>
+	<string>https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=</string>
+	<key>APIIngredientListURL</key>
+	<string>https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list</string>
+	<key>APIIngredientFilterURL</key>
+	<string>https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=</string>
+	<key>APICocktailDetailURL</key>
+	<string>https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=</string>
+	<key>UserDefaultsKey</key>
+	<string>savedCocktails</string>
+</dict>
+</plist>

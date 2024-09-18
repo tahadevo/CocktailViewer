@@ -20,9 +20,6 @@ class CocktailViewModel: ObservableObject {
     @Published private(set) var cocktailDetail: CocktailDetail?
     
     @Published private(set) var isLoading: Bool = false
-
-    private let userDefaultsKey = "savedCocktails"
-    private let baseUrl = "https://www.thecocktaildb.com/api/json/v1/1/"
     
     init() {
         loadSavedCocktails()
@@ -39,7 +36,7 @@ class CocktailViewModel: ObservableObject {
             self.isLoading = true
         }
         
-        guard let url = URL(string: "\(baseUrl)search.php?s=\(searchTerm)") else {
+        guard let url = URL(string: "\(Configuration.apiSearchURL)\(searchTerm)") else {
             print("Invalid URL")
             return
         }
@@ -64,7 +61,7 @@ class CocktailViewModel: ObservableObject {
             self.isLoading = true
         }
         
-        guard let url = URL(string: "\(baseUrl)list.php?c=list") else {
+        guard let url = URL(string: "\(Configuration.apiCategoryListURL)") else {
             print("Invalid URL")
             return
         }
@@ -89,7 +86,7 @@ class CocktailViewModel: ObservableObject {
             self.isLoading = true
         }
         
-        guard let url = URL(string: "\(baseUrl)list.php?i=list") else {
+        guard let url = URL(string: "\(Configuration.apiIngredientListURL)") else {
             print("Invalid URL")
             return
         }
@@ -115,7 +112,7 @@ class CocktailViewModel: ObservableObject {
             self.isLoading = true
         }
         
-        guard let url = URL(string: "\(baseUrl)filter.php?c=\(category.replacingOccurrences(of: " ", with: "_"))") else {
+        guard let url = URL(string: "\(Configuration.apiCategoryFilterURL)\(category.replacingOccurrences(of: " ", with: "_"))") else {
             print("Invalid URL")
             return
         }
@@ -140,7 +137,7 @@ class CocktailViewModel: ObservableObject {
             self.isLoading = true
         }
         
-        guard let url = URL(string: "\(baseUrl)filter.php?i=\(ingredient)") else {
+        guard let url = URL(string: "\(Configuration.apiIngredientFilterURL)\(ingredient)") else {
             print("Invalid URL")
             return
         }
@@ -165,7 +162,7 @@ class CocktailViewModel: ObservableObject {
             self.isLoading = true
         }
         
-        guard let url = URL(string: "\(baseUrl)lookup.php?i=\(id)") else {
+        guard let url = URL(string: "\(Configuration.apiCocktailDetailURL)\(id)") else {
             print("Invalid URL")
             return
         }
@@ -216,12 +213,12 @@ class CocktailViewModel: ObservableObject {
     private func saveCocktailsToUserDefaults() {
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(savedCocktails) {
-            UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
+            UserDefaults.standard.set(encoded, forKey: Configuration.userDefaultsKey)
         }
     }
     
     private func loadSavedCocktails() {
-        if let savedData = UserDefaults.standard.data(forKey: userDefaultsKey) {
+        if let savedData = UserDefaults.standard.data(forKey: Configuration.userDefaultsKey) {
             let decoder = JSONDecoder()
             if let loadedCocktails = try? decoder.decode([CocktailDetail].self, from: savedData) {
                 savedCocktails = loadedCocktails
