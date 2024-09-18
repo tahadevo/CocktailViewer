@@ -26,10 +26,19 @@ class CocktailViewModel: ObservableObject {
     }
     
     func initializeData() async {
-        await fetchCocktails(searchTerm: "")
-        await fetchCategories()
-        await fetchIngredients()
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                await self.fetchCocktails(searchTerm: "")
+            }
+            group.addTask {
+                await self.fetchCategories()
+            }
+            group.addTask {
+                await self.fetchIngredients()
+            }
+        }
     }
+
     
     func fetchCocktails(searchTerm: String) async {
         DispatchQueue.main.async {

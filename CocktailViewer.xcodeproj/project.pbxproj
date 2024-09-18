@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D203E1092C9B13A9005AA91B /* dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = D203E1082C9B13A9005AA91B /* dev.plist */; };
 		D203E10D2C9B16E3005AA91B /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D203E10C2C9B16E3005AA91B /* Configuration.swift */; };
 		D20459522C8B285200E8181B /* CocktailViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20459512C8B285200E8181B /* CocktailViewerApp.swift */; };
 		D20459562C8B285300E8181B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D20459552C8B285300E8181B /* Assets.xcassets */; };
@@ -28,7 +27,6 @@
 		D2099A2A2C8B3593006D79B0 /* HomepageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2099A292C8B3593006D79B0 /* HomepageView.swift */; };
 		D2B894612C98303300F39613 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D2B894602C98303300F39613 /* Localizable.xcstrings */; };
 		D2B894632C98B35200F39613 /* OnRotateModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B894622C98B35200F39613 /* OnRotateModifier.swift */; };
-		D2CB17EF2C9B213100A95356 /* prod.plist in Resources */ = {isa = PBXBuildFile; fileRef = D203E10A2C9B13BC005AA91B /* prod.plist */; };
 		D2CB17F02C9B214100A95356 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D203E10C2C9B16E3005AA91B /* Configuration.swift */; };
 		D2CB17F12C9B214700A95356 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D2B894602C98303300F39613 /* Localizable.xcstrings */; };
 		D2CB17F22C9B214C00A95356 /* OnRotateModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B894622C98B35200F39613 /* OnRotateModifier.swift */; };
@@ -299,7 +297,6 @@
 			files = (
 				D20459592C8B285300E8181B /* Preview Assets.xcassets in Resources */,
 				D20459562C8B285300E8181B /* Assets.xcassets in Resources */,
-				D203E1092C9B13A9005AA91B /* dev.plist in Resources */,
 				D2B894612C98303300F39613 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -308,7 +305,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2CB17EF2C9B213100A95356 /* prod.plist in Resources */,
 				D2CB17F12C9B214700A95356 /* Localizable.xcstrings in Resources */,
 				D2CB18032C9B219000A95356 /* Preview Assets.xcassets in Resources */,
 				D2CB18022C9B218800A95356 /* Assets.xcassets in Resources */,
