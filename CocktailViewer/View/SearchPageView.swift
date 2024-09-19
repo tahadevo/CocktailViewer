@@ -25,7 +25,7 @@ struct SearchPageView: View {
                 
                 Button(action: {
                     Task {
-                        await viewModel.fetchCocktails(searchTerm: searchText)
+                        await viewModel.fetchCocktailsByName(searchTerm: searchText)
                     }
                 }) {
                     Image(systemName: "magnifyingglass")

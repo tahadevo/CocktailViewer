@@ -7,6 +7,93 @@
 
 import Foundation
 
+struct CocktailModel {
+    private(set) var cocktails: [Cocktail] = []
+    private(set) var searchedCocktails: [Cocktail] = []
+    private(set) var categories: [String] = []
+    private(set) var ingredients: [String] = []
+    
+    private(set) var savedCocktails: [CocktailDetail] = []
+    private(set) var basket: [CocktailDetail] = []
+    
+    private(set) var filteredCocktails: [FilteredCocktail] = []
+    private(set) var cocktailDetail: CocktailDetail?
+    
+    init() {
+        savedCocktails = retrieveSavedCocktails()
+    }
+    
+    mutating func setCocktails(cocktails: [Cocktail]) {
+        self.cocktails = cocktails
+    }
+    
+    mutating func setSearchedCocktails(cocktails: [Cocktail]) {
+        self.searchedCocktails = cocktails
+    }
+    
+    mutating func setCategories(categories: [String]) {
+        self.categories = categories
+    }
+    
+    mutating func setIngredients(ingredients: [String]) {
+        self.ingredients = ingredients
+    }
+    
+    mutating func setFilteredCocktails(filteredCocktails: [FilteredCocktail]) {
+        self.filteredCocktails = filteredCocktails
+    }
+    
+    mutating func setCocktailDetail(cocktailDetail: CocktailDetail?) {
+        self.cocktailDetail = cocktailDetail
+    }
+    
+    mutating func saveCocktailsToSaved() {
+        savedCocktails.append(contentsOf: basket)
+        basket.removeAll()
+        saveCocktailsToUserDefaults()
+    }
+    
+    mutating func removeSavedCocktail(at index: Int) {
+        savedCocktails.remove(at: index)
+        saveCocktailsToUserDefaults()
+    }
+    
+    mutating func addToBasket(cocktail: CocktailDetail) {
+        basket.append(cocktail)
+    }
+    
+    mutating func removeFromBasket(at index: Int) {
+        basket.remove(at: index)
+    }
+    
+    mutating func clearSavedCocktails() {
+        savedCocktails.removeAll()
+        saveCocktailsToUserDefaults()
+    }
+    
+    mutating func clearSearchedCocktails() {
+        searchedCocktails.removeAll()
+    }
+    
+    private func saveCocktailsToUserDefaults() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(savedCocktails) {
+            UserDefaults.standard.set(encoded, forKey: Configuration.userDefaultsKey)
+        }
+    }
+    
+    private func retrieveSavedCocktails() -> [CocktailDetail] {
+        if let savedData = UserDefaults.standard.data(forKey: Configuration.userDefaultsKey) {
+            let decoder = JSONDecoder()
+            if let loadedCocktails = try? decoder.decode([CocktailDetail].self, from: savedData) {
+                return loadedCocktails
+            }
+        }
+        
+        return []
+    }
+}
+
 struct Cocktail: Identifiable, Codable {
     let id: String
     let name: String

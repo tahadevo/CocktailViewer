@@ -8,27 +8,50 @@
 import Foundation
 
 class CocktailViewModel: ObservableObject {
-    @Published private(set) var cocktails: [Cocktail] = []
-    @Published private(set) var searchedCocktails: [Cocktail] = []
-    @Published private(set) var categories: [String] = []
-    @Published private(set) var ingredients: [String] = []
-    
-    @Published private(set) var savedCocktails: [CocktailDetail] = []
-    @Published private(set) var basket: [CocktailDetail] = []
-    
-    @Published private(set) var filteredCocktails: [FilteredCocktail] = []
-    @Published private(set) var cocktailDetail: CocktailDetail?
-    
+    @Published private var model = CocktailModel()
     @Published private(set) var isLoading: Bool = false
+    private let repository: CocktailRepository
+        
+    init(repository: CocktailRepository = CocktailRepository()) {
+        self.repository = repository
+    }
     
-    init() {
-        loadSavedCocktails()
+    var cocktails: [Cocktail] {
+        return model.cocktails
+    }
+    
+    var searchedCocktails: [Cocktail] {
+        return model.searchedCocktails
+    }
+    
+    var categories: [String] {
+        return model.categories
+    }
+    
+    var ingredients: [String] {
+        return model.ingredients
+    }
+    
+    var savedCocktails: [CocktailDetail] {
+        return model.savedCocktails
+    }
+    
+    var basket: [CocktailDetail] {
+        return model.basket
+    }
+    
+    var filteredCocktails: [FilteredCocktail] {
+        return model.filteredCocktails
+    }
+    
+    var cocktailDetail: CocktailDetail? {
+        return model.cocktailDetail
     }
     
     func initializeData() async {
         await withTaskGroup(of: Void.self) { group in
             group.addTask {
-                await self.fetchCocktails(searchTerm: "")
+                await self.fetchCocktails()
             }
             group.addTask {
                 await self.fetchCategories()
@@ -39,199 +62,90 @@ class CocktailViewModel: ObservableObject {
         }
     }
 
+    func fetchCocktails() async {
+        DispatchQueue.main.async { self.isLoading = true }
+        let fetchedCocktails = await repository.fetchCocktails()
+        DispatchQueue.main.async { [self] in
+            model.setCocktails(cocktails: fetchedCocktails)
+            self.isLoading = false
+        }
+    }
     
-    func fetchCocktails(searchTerm: String) async {
-        DispatchQueue.main.async {
-            self.isLoading = true
-        }
-        
-        guard let url = URL(string: "\(Configuration.apiSearchURL)\(searchTerm)") else {
-            print("Invalid URL")
-            return
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decodedResponse = try JSONDecoder().decode(CocktailResponse.self, from: data)
-            DispatchQueue.main.async {
-                searchTerm == "" ? (self.cocktails = decodedResponse.drinks ?? []) : (self.searchedCocktails = decodedResponse.drinks ?? [])
-                self.isLoading = false
-            }
-        } catch {
-            print("Failed to fetch cocktails: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                self.isLoading = false
-            }
+    func fetchCocktailsByName(searchTerm: String) async {
+        DispatchQueue.main.async { self.isLoading = true }
+        let fetchedCocktails = await repository.fetchCocktailsByName(searchTerm: searchTerm)
+        DispatchQueue.main.async { [self] in
+            model.setSearchedCocktails(cocktails: fetchedCocktails)
+            self.isLoading = false
         }
     }
     
     func fetchCategories() async {
-        DispatchQueue.main.async {
-            self.isLoading = true
-        }
-        
-        guard let url = URL(string: "\(Configuration.apiCategoryListURL)") else {
-            print("Invalid URL")
-            return
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decodedResponse = try JSONDecoder().decode(CategoryListResponse.self, from: data)
-            DispatchQueue.main.async {
-                self.categories = decodedResponse.drinks.map { $0.strCategory }
-                self.isLoading = false
-            }
-        } catch {
-            print("Failed to fetch categories: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                self.isLoading = false
-            }
+        DispatchQueue.main.async { self.isLoading = true }
+        let fetchedCategories = await repository.fetchCategories()
+        DispatchQueue.main.async { [self] in
+            model.setCategories(categories: fetchedCategories)
+            self.isLoading = false
         }
     }
     
     func fetchIngredients() async {
-        DispatchQueue.main.async {
-            self.isLoading = true
+        DispatchQueue.main.async { self.isLoading = true }
+        let fetchedIngredients = await repository.fetchIngredients()
+        DispatchQueue.main.async { [self] in
+            model.setIngredients(ingredients: fetchedIngredients)
+            self.isLoading = false
         }
-        
-        guard let url = URL(string: "\(Configuration.apiIngredientListURL)") else {
-            print("Invalid URL")
-            return
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decodedResponse = try JSONDecoder().decode(IngredientListResponse.self, from: data)
-            DispatchQueue.main.async {
-                self.ingredients = decodedResponse.drinks.map { $0.strIngredient1 }
-                self.isLoading = false
-            }
-        } catch {
-            print("Failed to fetch categories: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                self.isLoading = false
-            }
-        }
-
     }
     
     func fetchCocktailsByCategory(category: String) async {
-        DispatchQueue.main.async {
-            self.isLoading = true
-        }
-        
-        guard let url = URL(string: "\(Configuration.apiCategoryFilterURL)\(category.replacingOccurrences(of: " ", with: "_"))") else {
-            print("Invalid URL")
-            return
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decodedResponse = try JSONDecoder().decode(FilteredCocktailListResponse.self, from: data)
-            DispatchQueue.main.async {
-                self.filteredCocktails = decodedResponse.drinks ?? []
-                self.isLoading = false
-            }
-        } catch {
-            print("Failed to fetch category-filtered cocktails: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                self.isLoading = false
-            }
+        DispatchQueue.main.async { self.isLoading = true }
+        let fetchedCocktails = await repository.fetchCocktailsByCategory(category: category)
+        DispatchQueue.main.async { [self] in
+            model.setFilteredCocktails(filteredCocktails: fetchedCocktails)
+            self.isLoading = false
         }
     }
     
     func fetchCocktailsByIngredient(ingredient: String) async {
-        DispatchQueue.main.async {
-            self.isLoading = true
-        }
-        
-        guard let url = URL(string: "\(Configuration.apiIngredientFilterURL)\(ingredient)") else {
-            print("Invalid URL")
-            return
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decodedResponse = try JSONDecoder().decode(FilteredCocktailListResponse.self, from: data)
-            DispatchQueue.main.async {
-                self.filteredCocktails = decodedResponse.drinks ?? []
-                self.isLoading = false
-            }
-        } catch {
-            print("Failed to fetch ingredient-filtered cocktails: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                self.isLoading = false
-            }
+        DispatchQueue.main.async { self.isLoading = true }
+        let fetchedCocktails = await repository.fetchCocktailsByIngredient(ingredient: ingredient)
+        DispatchQueue.main.async { [self] in
+            model.setFilteredCocktails(filteredCocktails: fetchedCocktails)
+            self.isLoading = false
         }
     }
     
     func fetchCocktailDetail(by id: String) async {
-        DispatchQueue.main.async {
-            self.isLoading = true
-        }
-        
-        guard let url = URL(string: "\(Configuration.apiCocktailDetailURL)\(id)") else {
-            print("Invalid URL")
-            return
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decodedResponse = try JSONDecoder().decode(CocktailDetailResponse.self, from: data)
-            DispatchQueue.main.async {
-                self.cocktailDetail = decodedResponse.drinks?.first
-                self.isLoading = false
-            }
-        } catch {
-            print("Failed to fetch cocktail detail: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                self.isLoading = false
-            }
+        DispatchQueue.main.async { self.isLoading = true }
+        let fetchedCocktail = await repository.fetchCocktailDetail(by: id)
+        DispatchQueue.main.async { [self] in
+            model.setCocktailDetail(cocktailDetail: fetchedCocktail)
+            self.isLoading = false
         }
     }
     
     func saveCocktailsToSaved() {
-        savedCocktails.append(contentsOf: basket)
-        basket.removeAll()
-        saveCocktailsToUserDefaults()
+        model.saveCocktailsToSaved()
     }
     
     func removeSavedCocktail(at index: Int) {
-        savedCocktails.remove(at: index)
-        saveCocktailsToUserDefaults()
+        model.removeSavedCocktail(at: index)
     }
     
     func addToBasket(cocktail: CocktailDetail) {
-        basket.append(cocktail)
+        model.addToBasket(cocktail: cocktail)
     }
     
     func removeFromBasket(at index: Int) {
-        basket.remove(at: index)
+        model.removeFromBasket(at: index)
     }
     
     func clearSavedCocktails() {
-        savedCocktails.removeAll()
-        saveCocktailsToUserDefaults()
+        model.clearSavedCocktails()
     }
     
     func clearSearchedCocktails() {
-        searchedCocktails.removeAll()
-    }
-    
-    private func saveCocktailsToUserDefaults() {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(savedCocktails) {
-            UserDefaults.standard.set(encoded, forKey: Configuration.userDefaultsKey)
-        }
-    }
-    
-    private func loadSavedCocktails() {
-        if let savedData = UserDefaults.standard.data(forKey: Configuration.userDefaultsKey) {
-            let decoder = JSONDecoder()
-            if let loadedCocktails = try? decoder.decode([CocktailDetail].self, from: savedData) {
-                savedCocktails = loadedCocktails
-            }
-        }
+        model.clearSearchedCocktails()
     }
 }
